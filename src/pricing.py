@@ -1,6 +1,6 @@
 def bulk_discount(quantity):
     """Orders of 10 or more items get a 10% discount."""
-    if quantity > 10:
+    if quantity >= 10:
         return 0.10
     return 0.0
 
