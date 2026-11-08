@@ -1,0 +1,29 @@
+# Copy to .github/workflows/tests.yml in the repository cifixer should watch.
+# It runs the tests and uploads the JUnit report as the artifact cifixer reads.
+# The artifact upload runs even when tests fail (that's the whole point).
+name: tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pytest
+      - run: python -m pytest -q --junitxml=junit.xml -o junit_family=xunit1
+      - name: Upload test report for cifixer
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cifixer-junit
+          path: junit.xml
+          retention-days: 3
